@@ -2,6 +2,7 @@ package com.josequinteros.starwarschallenge.shared.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -12,6 +13,11 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+	@ExceptionHandler(AuthenticationException.class)
+	ResponseEntity<ApiErrorResponse> handleAuthenticationFailure(AuthenticationException exception) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiErrorResponse("Invalid credentials"));
+	}
 
 	@ExceptionHandler(SwapiResourceNotFoundException.class)
 	ResponseEntity<ApiErrorResponse> handleNotFound(SwapiResourceNotFoundException exception) {

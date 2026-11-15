@@ -6,11 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-import com.josequinteros.starwarschallenge.shared.error.ApiErrorResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,10 +26,5 @@ public class LoginController {
         //Prevenir que los navegadores e intermediarios almacenen en caché una respuesta que contenga un token de acceso.
         return ResponseEntity.ok().cacheControl(CacheControl.noStore())
             .body(new LoginResponse(service.login(request.username(), request.password()), "Bearer", ttl));
-    }
-
-    @ExceptionHandler(AuthenticationException.class)
-    ResponseEntity<ApiErrorResponse> badCredentials() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiErrorResponse("Invalid credentials"));
     }
 }
